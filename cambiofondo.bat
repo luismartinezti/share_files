@@ -1,9 +1,18 @@
 @echo off
-:: Ruta de la nueva imagen
-set "https://img2.wallspic.com/previews/4/3/5/7/97534/97534-naturaleza-bosque-la_vegetacion-ecosistema-los_bosques_de_viejo_crecimiento-x750.jpg"
 
-:: Cambiar fondo en el registro
-reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "%wallpaper%" /f
+:: URL de la imagen
+set URL=https://img2.wallspic.com/previews/4/3/5/7/97534/97534-naturaleza-bosque-la_vegetacion-ecosistema-los_bosques_de_viejo_crecimiento-x750.jpg
 
-:: Actualizar la pantalla
-%SystemRoot%\System32\rundll32.exe user32.dll, UpdatePerUserSystemParameters
+:: Ruta donde se guardará
+set FILE=%TEMP%\wallpaper.jpg
+
+:: Descargar imagen (PowerShell)
+powershell -command "Invoke-WebRequest -Uri '%URL%' -OutFile '%FILE%'"
+
+:: Cambiar fondo de pantalla
+reg add "HKCU\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d "%FILE%" /f
+
+:: Aplicar cambios
+RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters
+
+exit
